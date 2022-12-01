@@ -1,0 +1,28 @@
+
+
+long long modexpo(long long a, long long b) {
+    if (b == 0)
+        return 1;
+    long long p = modexpo(a, b / 2) % mod;
+    p = (p * p) % mod;
+    return (b % 2 == 0) ? p : (a * p) % mod;
+}
+long long modinv(long long a) {
+    long long g = __gcd(a, mod);
+    if (g != 1)
+        return -1;
+    else {
+        return modexpo(a, mod- 2);
+    }
+}
+long long nCr(long long n,long long r)
+{
+    if (r == 0)
+        return 1;
+    long long fac[n + 1];
+    fac[0] = 1;
+    for (int i = 1; i <= n; i++)
+        fac[i] = (fac[i - 1] * i) % mod;
+
+    return (fac[n] * modinv(fac[r]) % mod * modinv(fac[n - r]) % mod) % mod;
+}
