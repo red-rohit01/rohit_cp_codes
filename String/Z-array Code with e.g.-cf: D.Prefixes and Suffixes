@@ -1,0 +1,96 @@
+/*____Rohit Kumar___________NITRR_______*/
+#include<bits/stdc++.h>
+using namespace std;
+const int mod=1000000007;
+ 
+#define int         long long
+#define ff          first
+#define ss          second
+#define pb          push_back
+#define ppb         pop_back()
+#define deb(x)      cout<<x<<"\n";
+#define deB(x,y)    cout<<x<<" "<<y<<"\n";
+#define Deb(x,y,z)  cout<<x<<" "<<y<<" "<<z<<"\n";
+#define YES         cout<<"YES\n";
+#define Yes         cout<<"Yes\n";
+#define NO          cout<<"NO\n";
+#define No          cout<<"No\n";
+#define clt(x)      63-__builtin_clzll(x)           // left most signinficant bit
+#define bct(x)      __builtin_popcountll(x)         // number of set bits
+#define ctz(x)      __builtin_ctzll(x)              // right most signinficant bit
+#define all(x)      (x).begin(),(x).end()
+#define pi          pair<int ,int>
+#define vi          vector<int>
+#define vpi         vector<pair<int,int>>
+#define fo(i,k,n)   for(int i=k;i<n;++i)
+#define maxpq       priority_queue<int>
+#define minpq       priority_queue<int , vector<int>, greater<int>>
+ 
+//cf-D.Prefixes and Suffixes
+
+vector<int> calZarray(string s)
+{
+    int n = s.size();
+    vector<int>z(n);
+    
+    for (int i = 1, l = 0, r = 0; i < n; ++i) 
+    {
+        if (i <= r)
+            z[i] = min (r-i+1,z[i-l]);
+
+        while (i + z[i] < n && s[z[i]] == s[i + z[i]])
+            z[i]++;
+
+        if (i + z[i] - 1 > r)
+            l = i, r = i + z[i] - 1;
+    }
+    return z;
+}
+
+void rohit()
+{
+    string rk;
+    cin>>rk;
+
+    vi z=calZarray(rk);
+
+    int n=rk.size();
+    z[0]=n;
+    vi freq(n+1);
+
+    fo(i,0,n) freq[z[i]]++;
+
+    for(int i=n-1;i>=0;--i)
+    {
+      freq[i]+=freq[i+1];
+    }
+
+    vpi ans;
+    fo(i,0,n)
+    {
+      if((i+z[i])==n) ans.push_back({z[i],freq[z[i]]});
+    }
+
+    cout<<ans.size()<<"\n";
+        sort(all(ans));
+    fo(i,0,ans.size())
+    {
+      cout<<ans[i].first<<" "<<ans[i].second<<"\n";
+    }
+
+}
+ 
+int32_t main()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  
+  int te=1;
+  //cin>>te;
+  while(te--)
+  {
+     rohit();
+  }
+  return 0;
+}
