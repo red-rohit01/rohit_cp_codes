@@ -5,7 +5,7 @@ struct Node {
 	Node *next[2];
 
 	Node()
-  {
+        {
 		 for(int i=0; i<2; i++) next[i] = NULL;
 	}
 };
@@ -13,17 +13,17 @@ struct Node {
 void insert(Node *curr, int x, int i) {
 	if(i == -1) return;
 	if((x & (1<<i)) > 0)
-  {
+        {
 		if(curr->next[1] == NULL)
-    {
+                {
 			curr->next[1] = new Node();
 		}
 		insert(curr->next[1], x, i-1);
 	}
-  else
-  {
+       else
+       {
 		if(curr->next[0] == NULL)
-    {
+                {
 			curr->next[0] = new Node();
 		}
 		insert(curr->next[0], x, i-1);
@@ -58,6 +58,26 @@ int search(Node *curr, int x, int i) {
 			return search(curr->next[0], x, i-1);
 		}
 	}
+}
+
+Node* remove(Node* curr,int x,int i)
+{
+    curr->cnt -=1;
+    if(curr->cnt ==0)
+    {
+        delete curr;
+        return NULL;
+    }
+    if(i==-1) return curr;
+    if((x & (1<<i)) > 0)        
+    {
+		curr->next[1]=remove(curr->next[1], x, i-1);
+	}
+    else
+    {
+		curr->next[0]=remove(curr->next[0], x, i-1);
+	}
+    return curr;
 }
 
 int main() {
