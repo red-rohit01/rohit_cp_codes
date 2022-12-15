@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 #define M (beg+end)/2
 using namespace std;
-
+// Lazy Propagation is used when we need to update a value not on just a single value but on a range in the array
 const int N = (int)(1e5+5);
 
 int a[N];
