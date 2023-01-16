@@ -16,7 +16,7 @@ int query(int r, int n) {
 }
 
 void update(int k, int delta, int n) {
-	k += 1;
+	k += 1;                                    // +1 for maintaining 1 based indexing.
 	for(; k<=n; k += (k & -k)) {
 		bit[k] += delta;
 	}
@@ -62,3 +62,30 @@ int main() {
 
 	2 3 0 2 3  -> 2    	
 */
+
+
+// other implementation of BIT 
+
+vector<int>bit;
+int getsum(int ind)
+{
+    int sum=0;
+    while(ind>0)
+    {
+        sum+=bit[ind];
+        ind-= ind & (-ind);
+    }
+    return sum;
+}
+
+void update(int n,int ind,int delta)                    // Here 'ind' is passed based on 1 based indexing.
+{
+      while(ind<=n)
+      {
+        bit[ind]+=delta;
+        ind += ind & (-ind);
+      }
+}
+
+
+
