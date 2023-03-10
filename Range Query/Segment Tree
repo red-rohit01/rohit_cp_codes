@@ -15,9 +15,9 @@ void build(int beg, int end, int pos) {
         int mid=beg+(end-beg)/2;
 	build(beg, mid, 2*pos+1);
 	build(mid+1, end, 2*pos+2);
-	st[pos] = st[2*pos+1] + st[2*pos+2];
-}
-
+	st[pos] = st[2*pos+1] + st[2*pos+2];                                    // Here it is 0 based means the top most element of segment tree is at index 0.so it's 
+}                                                                               // child are at (2*pos+1) and (2*pos+2) while in Pranav sir it is 1 based so the 
+                                                                                // child will be at (2*pos) and (2*pos+1).
 void update(int beg, int end, int idx, int val, int pos) {
 	if(beg == end) {
 		st[pos] = val;
