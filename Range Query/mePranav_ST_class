@@ -1,0 +1,88 @@
+// CF- Enemy is Weak
+
+class STree{
+private:
+    vector<int> tree;
+    int n;
+    int sum(int v, int tl, int tr, int l, int r) {      
+        if (l > r) return 0;
+        if (l == tl && r == tr) return tree[v];
+        
+        int tm = (tl + tr) / 2;
+        return sum(v*2, tl, tm, l, min(r, tm))  + sum(v*2+1, tm+1, tr, max(l, tm+1), r);
+    }
+    void buildTree(vector<int>& a,int tl, int tr,int v=1){
+        if(tl>tr) return;
+        if(tl==tr){
+            tree[v]=a[tl];
+            return;
+        }
+ 
+        int mid=(tl+tr)/2;
+        buildTree(a,tl,mid,v*2);
+        buildTree(a,mid+1,tr,v*2+1);
+        tree[v]=tree[v*2]+tree[v*2+1];
+    }
+    void update(int idx,int val,int v,int tl,int tr){
+        if(tl>tr) return;
+        if(idx<tl || idx>tr)  return;     //not in the current range
+        if(tl==tr){
+            tree[v]=val;
+            return;
+        }
+        int tmid=(tl+tr)/2;
+        update(idx,val,v*2,tl,tmid);
+        update(idx,val,v*2+1,tmid+1,tr);
+        tree[v]=tree[v*2]+tree[v*2+1];
+    }
+public:
+    STree(int sz,vector<int>& vec){
+        n=sz;
+        tree.assign(sz*4,0);
+        buildTree(vec,0,n-1);
+    }
+ 
+    int getSum(int l,int r){
+        return sum(1,0,n-1,l,r);         // call the function!
+    }
+    void update(int idx,int val){     // v is the new value!
+        update(idx,val,1,0,n-1);
+    }
+    void printTree(vector<int>& v){
+        cout<<v<<"\n";
+    }
+ 
+};
+
+
+void solve(){
+    int n=1,m=0;
+    string s;
+    cin>>n;
+    vi v(n);
+    cin>>v;
+    vi greaterToLeft(n,0);
+    vi smallerToRight(n,0);
+    vector<int> emp(n,0);
+    STree st(n,emp),st2(n,emp);
+    set<int> els(all(v));
+    int id=0;
+    unordered_map<int,int> locs;
+    for(auto& i:els)    locs[i]=id++;
+    for(int i=0;i<n;i++){
+        int loc=locs[v[i]];
+        greaterToLeft[i]=st.getSum(loc+1,id-1);        // all elements to my left which are greater than me 
+        st.update(loc,1);
+    }
+    for(int i=n-1;i>=0;i--){
+        int loc=locs[v[i]];
+        smallerToRight[i]=st2.getSum(0,loc-1);
+        st2.update(loc,1);
+    }
+    int res=0;
+    for(int i=1;i<n-1;i++){
+        res+=smallerToRight[i]*greaterToLeft[i];
+    }
+    cout<<res<<"\n";
+}
+
