@@ -1,0 +1,105 @@
+/*____Rohit Kumar___________NITRR_______*/   //CF-1927D
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int          long long
+
+class STree{
+private:
+    vector<pair<int,int>> tree;
+    int n;
+    pair<int,int> sum(int v, int tl, int tr, int l, int r) {      
+        if (l > r) return {1e7,0};
+        if (l == tl && r == tr) return tree[v];
+        
+        int tm = (tl + tr) / 2;
+        auto val1=sum(v*2, tl, tm, l, min(r, tm));
+        auto val2=sum(v*2+1, tm+1, tr, max(l, tm+1), r);
+
+        pair<int,int>ans;
+        ans.first=min(val1.first,val2.first);
+        ans.second=max(val1.second,val2.second);
+
+        return ans;
+    }
+    void buildTree(vector<int>& a,int tl, int tr,int v=1){
+        if(tl>tr) return;
+        if(tl==tr){
+            tree[v]={a[tl],a[tl]};
+            return;
+        }
+ 
+        int mid=(tl+tr)/2;
+        buildTree(a,tl,mid,v*2);
+        buildTree(a,mid+1,tr,v*2+1);
+        tree[v].first=min(tree[v*2].first,tree[v*2+1].first);
+        tree[v].second=max(tree[v*2].second,tree[v*2+1].second);
+    }
+    
+public:
+    STree(int sz,vector<int>& vec){
+        n=sz;
+        tree.assign(sz*4,{1e7,0});
+        buildTree(vec,0,n-1);
+    }
+ 
+    pair<int,int> getSum(int l,int r){
+        return sum(1,0,n-1,l,r);         
+    }
+};
+
+ 
+void rohit()
+{
+   int n;
+   cin>>n;
+   vector<int>rk(n);
+   unordered_map<int,vector<int>>mp;
+   for(int i=0;i<n;++i) 
+   {
+      cin>>rk[i];
+      mp[rk[i]].push_back(i+1);
+   }   
+   
+   STree st(n,rk);
+
+   int q;
+   cin>>q;
+   while(q--)
+   {
+      int l;
+      int r;
+      cin>>l>>r;
+
+      auto p=st.getSum(l-1,r-1);                          // Here l and r are 1 based so, (l-1) and (r-1) to make it 0-based.
+
+      if(p.first==p.second)
+      {
+         cout<<"-1 -1\n";
+      }
+      else 
+      {
+         int mn=p.first;
+         int mx=p.second;
+         int val1=*lower_bound(mp[mn].begin(),mp[mn].end(),l);
+         int val2=*lower_bound(mp[mx].begin(),mp[mx].end(),l);
+
+         cout<<val1<<" "<<val2<<"\n";
+      }
+   } 
+}
+ 
+int32_t main()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
+  
+  int te=1;
+  cin>>te;
+  while(te--)
+  {
+     rohit();
+  }
+  return 0;
+}
